@@ -1,8 +1,15 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+}
+
+val apikeyProps = Properties().apply {
+    val file = rootProject.file("apikey.properties")
+    file.inputStream().use(this::load)
 }
 
 android {
@@ -20,6 +27,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "MARVEL_KEY", apikeyProps.getProperty("MARVEL_KEY"))
+        buildConfigField("String", "MARVEL_SECRET", apikeyProps.getProperty("MARVEL_SECRET"))
     }
 
     buildTypes {
@@ -40,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
