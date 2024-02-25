@@ -5,12 +5,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.comicslibrary.ui.theme.ComicsLibraryTheme
+import com.example.comicslibrary.view.CharactersBottomNav
+import com.example.comicslibrary.view.CollectionScreen
+import com.example.comicslibrary.view.LibraryScreen
+
+sealed class Destination(val route: String) {
+    object Library : Destination("Library")
+    object Collection : Destination("Collection")
+    object CharacterDetail : Destination("character/{characterId}") {
+        fun createRoute(characterId: Int?) = "character/$characterId"
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +36,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    val navController = rememberNavController()
+                    CharactersScaffold(navController = navController)
                 }
             }
         }
@@ -30,17 +45,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun CharactersScaffold(navController: NavHostController) {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ComicsLibraryTheme {
-        Greeting("Android")
+    Scaffold(
+        bottomBar = { CharactersBottomNav(navController = navController) }
+    ) { paddingValues ->
+        NavHost(navController = navController, startDestination = Destination.Library.route) {
+            composable(Destination.Library.route) {
+                LibraryScreen()
+            }
+            composable(Destination.Collection.route) {
+                CollectionScreen()
+            }
+            composable(Destination.CharacterDetail.route) { navBackStackEntry ->
+            }
+        }
     }
 }
