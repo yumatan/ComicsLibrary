@@ -8,8 +8,7 @@ plugins {
 }
 
 val apikeyProps = Properties().apply {
-    val file = rootProject.file("apikey.properties")
-    file.inputStream().use(this::load)
+    rootProject.file("apikey.properties").inputStream().use(this::load)
 }
 
 android {
