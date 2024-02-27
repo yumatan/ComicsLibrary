@@ -17,6 +17,7 @@ import com.example.comicslibrary.ui.theme.ComicsLibraryTheme
 import com.example.comicslibrary.view.CharactersBottomNav
 import com.example.comicslibrary.view.CollectionScreen
 import com.example.comicslibrary.view.LibraryScreen
+import dagger.hilt.android.AndroidEntryPoint
 
 sealed class Destination(val route: String) {
     object Library : Destination("Library")
@@ -26,6 +27,7 @@ sealed class Destination(val route: String) {
     }
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
